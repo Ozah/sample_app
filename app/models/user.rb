@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessible :email, :name, :password, :password_confirmation
+  attr_accessible :name, :email, :password, :password_confirmation
   #this gives the :authenticate method and the :password_digest
   has_secure_password
 
