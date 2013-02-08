@@ -4,6 +4,25 @@ describe "User pages" do
 
   subject { page }
 
+  describe "destroy" do
+    describe "as an admin" do
+      let(:admin) { FactoryGirl.create(:admin) }
+      before { sign_in admin }
+
+      describe "destroying himself" do
+        before { delete user_path(admin) }
+        specify { response.should redirect_to(root_path) }
+
+        describe "he should still exist" do
+          before { visit user_path(admin) }
+
+          it { should have_selector('h1',    text: admin.name) }
+          it { should have_selector('title', text: admin.name) }
+        end
+      end
+    end
+  end
+
   describe "index" do
 
     let(:user) { FactoryGirl.create(:user) }
@@ -89,7 +108,7 @@ describe "User pages" do
         fill_in "Name",         with: "Example User"
         fill_in "Email",        with: "user@example.com"
         fill_in "Password",     with: "foobar"
-        fill_in "Confirmation", with: "foobar"
+        fill_in "Confirm Password", with: "foobar"
       end
 
       it "should create a user" do
