@@ -13,6 +13,7 @@ class UsersController < ApplicationController
   # GET /users/1  user_path(user)
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   # GET /users/new  new_user_path

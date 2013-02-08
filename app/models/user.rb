@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   attr_accessible :name, :email, :password, :password_confirmation
   #this gives the :authenticate method and the :password_digest
   has_secure_password
+  has_many :microposts, dependent: :destroy
 
   before_save { |user| user.email = email.downcase }
   #before_save :create_remember_token #this crashes on Heroku!!
