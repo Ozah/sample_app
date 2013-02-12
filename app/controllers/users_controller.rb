@@ -1,27 +1,27 @@
 class UsersController < ApplicationController
   #the before filter applies only to the "edit" and "update" actions
-  before_filter :signed_in_user, only: [:index, :edit, :update]
+  before_filter :signed_in_user, only: [:index, :edit, :update, :following, :followers]
   before_filter :correct_user,   only: [:edit, :update]
   before_filter :admin_user,     only: :destroy
   before_filter :signed_in_user_filter, only: [:new, :create]
 
-  # GET /users  users_path
+  #GET /users  users_path
   def index
     @users = User.paginate(page: params[:page])
   end
 
-  # GET /users/1  user_path(user)
+  #GET /users/1  user_path(user)
   def show
     @user = User.find(params[:id])
     @microposts = @user.microposts.paginate(page: params[:page])
   end
 
-  # GET /users/new  new_user_path
+  #GET /users/new  new_user_path
   def new
     @user = User.new
   end
 
-  # POST /users users_path
+  #POST /users users_path
   def create
     @user = User.new(params[:user])
     if @user.save
@@ -34,11 +34,11 @@ class UsersController < ApplicationController
 
   end
 
-  # GET /users/1/edit edit_user_path(user)
+  #GET /users/1/edit edit_user_path(user)
   def edit
   end
 
-  # PUT /users/1  user_path(user)
+  #PUT /users/1  user_path(user)
   def update
     if @user.update_attributes(params[:user])
       flash[:success] = "Profile updated"
@@ -49,7 +49,7 @@ class UsersController < ApplicationController
     end
   end
 
-  # DELETE /users/1 user_path(user)
+  #DELETE /users/1 user_path(user)
   def destroy
     User.find(params[:id]).destroy
     flash[:success] = "User destroyed."
@@ -64,6 +64,22 @@ class UsersController < ApplicationController
     #else
     #  redirect_to(root_path)
     #end
+  end
+
+  #GET /users/1/following  following_user_path(1)
+  def following
+    @title = "Following"
+    @user = User.find(params[:id])
+    @users = @user.followed_users.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  #GET /users/1/followers	followers_user_path(1)
+  def followers
+    @title = "Followers"
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
   end
 
   private
